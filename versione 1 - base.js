@@ -6,16 +6,47 @@ Versione 1 - Base
 */
 const prompt=require("prompt-sync")();
 
-function r_dati()
+class Partecipante
 {
-    let partecipante=
+    constructor(nome,cognome,sesso,data,nazionalita)
     {
-        nome: prompt("Nome >> "),
-        cognome: prompt("Cognome >> "),
-        sesso: prompt("Sesso >> "),
-        data: prompt("Data di nascita **/**/**** >> ")
-    };
-    
+        this.nome=nome;
+        this.cognome=cognome;
+        this.sesso=sesso;
+        this.data=data;
+        this.nazionalita=nazionalita;
+    }
+}
+
+function r_dati(partecipante_set)
+{
+    let nome=prompt("Nome: ");
+    let cognome=prompt("Cognome: ");
+    let trovato=false;
+
+    //confrontare nome e cognome (?) per vedere se il partecipante è già iscritto
+
+    partecipante_set.forEach(partecipante=>
+        {
+            if(partecipante.nome===nome && partecipante.cognome===cognome)
+            {
+                trovato=true;
+            }
+        });
+
+    if(!trovato)
+    {
+        let sesso=prompt("Sesso: ");
+        let data=prompt("Data di nascita: ");
+        let nazionalita=prompt("Nazionalità: ");
+        let partecipante=new Partecipante(nome,cognome,sesso,data,nazionalita);
+        partecipante_set.add(partecipante);
+        console.log("\nPartecipante iscritto correttamente!\n");
+    }
+    else
+    {
+        console.log("Partecipante già iscritto!\n");
+    }
 }
 
 function r_gare()
@@ -31,6 +62,7 @@ function classifica()
 function main()
 {
     let scelta;
+    let partecipante_set=new Set();
     console.log("Calcolatore di statistiche campionato di atletica leggera\n");
     do
     {
@@ -38,11 +70,11 @@ function main()
         console.log("0 - Esci;")
         console.log("1 - Registrazione dei principali dati anagrafici dei giocatori;");
         console.log("2 - Registrazione delle singole gare e dei relativi partecipanti;");
-        console.log("3 - Creazione ed aggiornamento della classifica di campionato.");
+        console.log("3 - Creazione ed aggiornamento della classifica di campionato.\n");
         scelta=parseInt(prompt(">> "));
         switch(scelta)
         {
-            case 1: r_dati();       break;
+            case 1: r_dati(partecipante_set);       break;
             case 2: r_gare();       break;
             case 3: classifica();   break;
         }
