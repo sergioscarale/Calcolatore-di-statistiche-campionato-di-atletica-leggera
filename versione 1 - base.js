@@ -66,7 +66,7 @@ function r_dati(partecipante_set)
 function casuale()
 {
     tempo=9.5+Math.random()*(11-9.5);
-    return tempo;
+    return tempo.toFixed(2);
 }
 
 function cento(gara_set,nome,cognome)
@@ -107,7 +107,7 @@ function r_gare(partecipante_set,gara_set)
         {
             if(gara.partecipante.nome===nome && gara.partecipante.cognome===cognome)
             {
-                trovato_gara = true;
+                trovato_gara=true;
                 break;
             }
         }
@@ -132,9 +132,28 @@ function r_gare(partecipante_set,gara_set)
     }while(scelta!==2);
 }
 
-function classifica()
-{
-    //implementazione classifica
+function classifica(partecipante_set,gara_set)
+ {
+    console.log("\nCLASSIFICA\n");
+    let classificaArray=[];
+    partecipante_set.forEach(partecipante=>
+    {
+        let tempo=0;
+        gara_set.forEach(gara=>
+        {
+            if(gara.partecipante.nome===partecipante.nome && gara.partecipante.cognome===partecipante.cognome)
+            {
+                tempo+=parseFloat(gara.tempo); // Converto il tempo in float perchè sennò otterremo uno 0 prima di corridore.tempo
+            }
+        });
+        classificaArray.push({nome: partecipante.nome,cognome: partecipante.cognome,tempo: tempo });
+    });
+    classificaArray.sort((a,b)=>a.tempo-b.tempo);
+    classificaArray.forEach((corridore,posizione)=>
+    {
+        console.log(`${posizione+1}. ${corridore.nome} ${corridore.cognome} - Tempo: ${corridore.tempo} secondi`);
+    });
+    console.log("\n");
 }
 
 function main()
@@ -142,6 +161,7 @@ function main()
     let scelta;
     let partecipante_set=new Set();
     let gara_set=new Set();
+    let classifica_set=new Set();
     console.log("Calcolatore di statistiche campionato di atletica leggera\n");
     do
     {
@@ -155,7 +175,7 @@ function main()
         {
             case 1: r_dati(partecipante_set);               break;
             case 2: r_gare(partecipante_set,gara_set);      break;
-            case 3: classifica();   break;
+            case 3: classifica(partecipante_set,gara_set);  break;
         }
     }while(scelta!==0);
 }
