@@ -1,9 +1,3 @@
-/*
-Versione 1 - Base
-- La registrazione dei principali dati anagrafici dei giocatori.        👏
-- La registrazione delle singole gare e dei relativi partecipanti.
-- La creazione ed aggiornamento della classifica di campionato.
-*/
 const prompt=require("prompt-sync")();
 
 class Partecipante
@@ -28,35 +22,21 @@ class Gara
     }
 }
 
-function controllo(partecipante_set,nome,cognome)
+function r_dati(partecipante_map)
 {
-    let trovato=false;
-    //confrontare nome e cognome (?) per vedere se il partecipante è già iscritto
-    partecipante_set.forEach(partecipante=>
-        {
-            if(partecipante.nome===nome && partecipante.cognome===cognome)
-            {
-                trovato=true;
-            }
-        });
-    return trovato;
-}
+    let chiave=prompt("Inserisci l'ID del partecipante: ");
 
-function r_dati(partecipante_set)
-{
-    let nome=prompt("Nome: ");
-    let cognome=prompt("Cognome: ");
-    let trovato=controllo(partecipante_set,nome,cognome);
-
-    if(!trovato)
+    if(!partecipante_map.has(chiave))
     {
+        let nome=prompt("Nome: ");
+        let cognome=prompt("Cognome: ");
         let sesso=prompt("Sesso: ");
         let data=prompt("Data di nascita: ");
         let nazionalita=prompt("Nazionalità: ");
         let partecipante=new Partecipante(nome,cognome,sesso,data,nazionalita);
-        partecipante_set.add(partecipante);
+        partecipante_map.set(chiave,partecipante);
         console.log("\nPartecipante iscritto correttamente!\n");
-    }
+    } 
     else
     {
         console.log("Partecipante già iscritto!\n");
@@ -65,93 +45,93 @@ function r_dati(partecipante_set)
 
 function casuale()
 {
-    tempo=9.5+Math.random()*(11-9.5);
+    let tempo=9.5+Math.random()*(11-9.5);
     return tempo.toFixed(2);
 }
 
-function cento(gara_set,nome,cognome)
+function cento(gara_map,partecipante_map)
 {
-    let tempo=casuale();
-    let partecipante=new Partecipante(nome,cognome);
-    let gara=new Gara("100 metri",tempo,partecipante);
-    gara_set.add(gara);
-    stampaGara(gara);
+    let chiave=prompt("Inserisci l'ID del partecipante: ");
+
+    if (partecipante_map.has(chiave) && !gara_map.has(chiave))
+    {
+        let tempo=casuale();
+        let partecipante=partecipante_map.get(chiave);
+        let gara=new Gara("100 metri",tempo,partecipante);
+        gara_map.set(chiave,gara);
+        stampaGara(gara);
+    } 
+    else
+    {
+        console.log("Partecipante non presente o già registrato in una gara!\n");
+    }
 }
 
-function duecento(gara_set,nome,cognome)
+function duecento(gara_map,partecipante_map)
 {
-    let tempo=casuale();
-    let partecipante=new Partecipante(nome,cognome);
-    let gara=new Gara("200 metri",tempo,partecipante);
-    gara_set.add(gara);
-    stampaGara(gara);
+    let chiave=prompt("Inserisci l'ID del partecipante: ");
+
+    if (partecipante_map.has(chiave) && !gara_map.has(chiave))
+    {
+        let tempo=casuale();
+        let partecipante=partecipante_map.get(chiave);
+        let gara=new Gara("200 metri",tempo,partecipante);
+        gara_map.set(chiave,gara);
+        stampaGara(gara);
+    } 
+    else
+    {
+        console.log("Partecipante non presente o già registrato in una gara!\n");
+    }
 }
 
 function stampaGara(gara)
- {
+{
     console.log("Tipo di gara: ",gara.tipo_gara);
     console.log("Tempo: ",gara.tempo+" secondi");
     console.log("Partecipante: ",gara.partecipante.nome,gara.partecipante.cognome);
 }
 
-function r_gare(partecipante_set,gara_set)
+function r_gare(partecipante_map, gara_map)
 {
-    let scelta,trovato_partecipante,trovato_gara;
-    do
+    let scelta;
+    do 
     {
-        console.log("Inserisci i partecipanti della gara");
-        let nome=prompt("Nome: ");
-        let cognome=prompt("Cognome: ");
-        trovato_partecipante=controllo(partecipante_set,nome,cognome);
-        for(let gara of gara_set)
+        console.log("\nTIPO DI GARA\n");
+        console.log("0 - Esci");
+        console.log("1 - 100 metri");
+        console.log("2 - 200 metri");
+        scelta=parseInt(prompt(">> "));
+        switch(scelta)
         {
-            if(gara.partecipante.nome===nome && gara.partecipante.cognome===cognome)
-            {
-                trovato_gara=true;
-                break;
-            }
-        }
-        if(trovato_partecipante===true && !trovato_gara)
-        {
-            console.log("\nTIPO DI GARA\n");
-            console.log("0 - Esci");
-            console.log("1 - 100 metri");
-            console.log("2 - 200 metri");
-            scelta=parseInt(prompt(">> "));
-            switch(scelta)
-            {
-                case 1: cento(gara_set,nome,cognome);        break;
-                case 2: duecento(gara_set,nome,cognome);     break;
-            }
-        }
-        else
-        {
-            console.log("Partecipante non presente o già registrato in una gara!\n");
+            case 1: cento(gara_map, partecipante_map); break;
+            case 2: duecento(gara_map, partecipante_map); break;
         }
         scelta=parseInt(prompt("\n1 - Continua inserimento\n2 - Esci inserimento \n>> "));
     }while(scelta!==2);
 }
 
-function classifica(partecipante_set,gara_set)
- {
+function classifica(partecipante_map,gara_map)
+{
     console.log("\nCLASSIFICA\n");
     let classificaArray=[];
-    partecipante_set.forEach(partecipante=>
+
+    partecipante_map.forEach((partecipante,chiave)=>
     {
         let tempo=0;
-        gara_set.forEach(gara=>
+        if(gara_map.has(chiave))
         {
-            if(gara.partecipante.nome===partecipante.nome && gara.partecipante.cognome===partecipante.cognome)
-            {
-                tempo+=parseFloat(gara.tempo); // Converto il tempo in float perchè sennò otterremo uno 0 prima di corridore.tempo
-            }
-        });
-        classificaArray.push({nome: partecipante.nome,cognome: partecipante.cognome,tempo: tempo });
+            let gara=gara_map.get(chiave);
+            tempo+=parseFloat(gara.tempo);
+        }
+        classificaArray.push({ nome: partecipante.nome,cognome: partecipante.cognome,tempo: tempo });
     });
+
     classificaArray.sort((a,b)=>a.tempo-b.tempo);
+
     classificaArray.forEach((corridore,posizione)=>
     {
-        console.log(`${posizione+1}. ${corridore.nome} ${corridore.cognome} - Tempo: ${corridore.tempo} secondi`);
+        console.log(`${posizione + 1}. ${corridore.nome} ${corridore.cognome} - Tempo: ${corridore.tempo} secondi`);
     });
     console.log("\n");
 }
@@ -159,23 +139,22 @@ function classifica(partecipante_set,gara_set)
 function main()
 {
     let scelta;
-    let partecipante_set=new Set();
-    let gara_set=new Set();
-    let classifica_set=new Set();
+    let partecipante_map=new Map();
+    let gara_map=new Map();
     console.log("Calcolatore di statistiche campionato di atletica leggera\n");
     do
     {
         console.log("VERSIONE 1 - Base");
-        console.log("0 - Esci;")
+        console.log("0 - Esci;");
         console.log("1 - Registrazione dei principali dati anagrafici dei giocatori;");
         console.log("2 - Registrazione delle singole gare e dei relativi partecipanti;");
         console.log("3 - Creazione ed aggiornamento della classifica di campionato.\n");
         scelta=parseInt(prompt(">> "));
-        switch(scelta)
+        switch (scelta)
         {
-            case 1: r_dati(partecipante_set);               break;
-            case 2: r_gare(partecipante_set,gara_set);      break;
-            case 3: classifica(partecipante_set,gara_set);  break;
+            case 1: r_dati(partecipante_map); break;
+            case 2: r_gare(partecipante_map, gara_map); break;
+            case 3: classifica(partecipante_map, gara_map); break;
         }
     }while(scelta!==0);
 }
