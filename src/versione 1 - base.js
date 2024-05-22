@@ -1,4 +1,8 @@
-const prompt=require("prompt-sync")();
+const prompt = require("prompt-sync")();
+
+const fs = require('fs');
+let controlloc = 0;
+let controllod = 0;
 
 /**
  *@author  Sergio Scarale,Matteo De Bonis,Davide Cocomazzi,Biagio Piazza
@@ -6,6 +10,7 @@ const prompt=require("prompt-sync")();
 
 /**
  * Classe che crea l'oggetto partecipante
+ * @class
  */
 class Partecipante
 {
@@ -27,16 +32,33 @@ class Partecipante
     }
 }
 
+/**
+ * Classe che rappresenta una gara.
+ * @class
+ */
 class Gara
 {
     constructor(tipo_gara,tempo,partecipante)
     {
+        /**
+     * Crea una gara.
+     * @constructs Gara
+     * @param {string} tipo_gara - Il tipo di gara.
+     * @param {string} tempo - Il tempo impiegato per completare la gara.
+     * @param {Partecipante} partecipante - Il partecipante alla gara.
+     */
         this.tipo_gara=tipo_gara;
         this.tempo=tempo;
         this.partecipante=partecipante;
     }
 }
 
+/**
+ * Registra i dati di un partecipante.
+ * @function
+ * @param {Map<string, Partecipante>} partecipante_map - La mappa dei partecipanti.
+ * @description Registra un partecipante chiedendo all'utente i dettagli del partecipante e aggiungendo il partecipante alla mappa.
+ */
 function r_dati(partecipante_map)
 {
     let chiave=prompt("Inserisci l'ID del partecipante: ");
@@ -58,14 +80,43 @@ function r_dati(partecipante_map)
     }
 }
 
+/**
+ * Genera un tempo casuale per una gara.
+ * @function
+ * @returns {string} Il tempo generato per la gara.
+ * @description Genera un tempo casuale per una gara tra 9.5 e 11 secondi.
+ */
 function casuale()
 {
     let tempo=9.5+Math.random()*(11-9.5);
     return tempo.toFixed(2);
 }
 
+/**
+ * Registra un partecipante per una gara di 100 metri.
+ * @function
+ * @param {Map<string, Gara>} gara_map - La mappa delle gare.
+ * @param {Map<string, Partecipante>} partecipante_map - La mappa dei partecipanti.
+ * @description Registra un partecipante per una gara di 100 metri se il partecipante esiste e non è già stato registrato per una gara.
+ */
 function cento(gara_map,partecipante_map)
 {
+    let scrivi;
+    if(controlloc==0)
+    {
+        scrivi="100 metri\n";
+        fs.appendFile('classifica.txt', scrivi, err => {
+            if(err)
+                {
+                    console.log(err);
+                    return;
+                }   
+        });
+        controlloc++;
+    }
+    
+    
+
     let chiave=prompt("Inserisci l'ID del partecipante: ");
 
     if (partecipante_map.has(chiave) && !gara_map.has(chiave))
@@ -73,8 +124,9 @@ function cento(gara_map,partecipante_map)
         let tempo=casuale();
         let partecipante=partecipante_map.get(chiave);
         let gara=new Gara("100 metri",tempo,partecipante);
-        gara_map.set(chiave,gara);
-        stampaGara(gara);
+        gara_map.set(chiave,gara); 
+        
+        
     } 
     else
     {
@@ -84,6 +136,20 @@ function cento(gara_map,partecipante_map)
 
 function duecento(gara_map,partecipante_map)
 {
+    let scrivi;
+    if(controllod==0)
+    {
+        scrivi="200 metri\n";
+        fs.appendFile('classifica.txt', scrivi, err => {
+            if(err)
+                {
+                    console.log(err);
+                    return;
+                }   
+        });
+        controllod++;
+    }
+    
     let chiave=prompt("Inserisci l'ID del partecipante: ");
 
     if (partecipante_map.has(chiave) && !gara_map.has(chiave))
@@ -92,19 +158,12 @@ function duecento(gara_map,partecipante_map)
         let partecipante=partecipante_map.get(chiave);
         let gara=new Gara("200 metri",tempo,partecipante);
         gara_map.set(chiave,gara);
-        stampaGara(gara);
+        
     } 
     else
     {
         console.log("Partecipante non presente o già registrato in una gara!\n");
     }
-}
-
-function stampaGara(gara)
-{
-    console.log("Tipo di gara: ",gara.tipo_gara);
-    console.log("Tempo: ",gara.tempo+" secondi");
-    console.log("Partecipante: ",gara.partecipante.nome,gara.partecipante.cognome);
 }
 
 function r_gare(partecipante_map, gara_map)
@@ -146,13 +205,23 @@ function classifica(partecipante_map,gara_map)
 
     classificaArray.forEach((corridore,posizione)=>
     {
-        console.log(`${posizione + 1}. ${corridore.nome} ${corridore.cognome} - Tempo: ${corridore.tempo} secondi`);
+        scrivi=`${posizione + 1}. ${corridore.nome} ${corridore.cognome} - Tempo: ${corridore.tempo} secondi`;
+        fs.appendFile('classifica.txt', scrivi+"\n", err => {
+        if(err)
+        {
+            console.log(err);
+            return;
+        }   
     });
-    console.log("\n");
+ });
+
+
+    
 }
 
 function main()
 {
+    
     let scelta;
     let partecipante_map=new Map();
     let gara_map=new Map();
