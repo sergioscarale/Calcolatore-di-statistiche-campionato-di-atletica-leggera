@@ -141,6 +141,14 @@ function classifica(partecipante_map,gara_map)
     console.log("\n");
 }
 
+/**
+ * Funzione principale per eseguire l'applicazione.
+ * @function 
+ * @param {let} scelta 
+ * @param {Map<strign partecipante_map} partecipante_map
+ * @param {Map<string gara_map} gara_map 
+ * @description Il punto d'ingresso principale per l'applicazione del campionato di atletica leggera, fornendo opzioni per regitrare i partecipanti, registrare le gare e visualizzare le classifiche.
+ */
 function main()
 {
     let scelta;
