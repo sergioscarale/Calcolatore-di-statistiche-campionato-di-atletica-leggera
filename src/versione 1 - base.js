@@ -37,12 +37,11 @@ class Gara
     constructor(tipo_gara,tempo,partecipante)
     {
         /**
-     * Crea una gara.
-     * @constructs Gara
-     * @param {string} tipo_gara - Il tipo di gara.
-     * @param {string} tempo - Il tempo impiegato per completare la gara.
-     * @param {Partecipante} partecipante - Il partecipante alla gara.
-     */
+         * Crea una gara.
+         * @constructs Gara
+         * @param {string} tempo - Il tempo impiegato per completare la gara.
+         * @param {Partecipante} partecipante - Il partecipante alla gara.
+         */
         this.tipo_gara=tipo_gara;
         this.tempo=tempo;
         this.partecipante=partecipante;
@@ -88,73 +87,33 @@ function casuale()
     return tempo.toFixed(2);
 }
 
-/**
- * Registra un partecipante per una gara di 100 metri.
- * @function
- * @param {Map<string, Gara>} gara_map - La mappa delle gare.
- * @param {Map<string, Partecipante>} partecipante_map - La mappa dei partecipanti.
- * @description Registra un partecipante per una gara di 100 metri se il partecipante esiste e non è già stato registrato per una gara.
- */
-function cento(gara_map,partecipante_map)
+function r2_gara(tipo_gara,partecipante_map,gara_map)
 {
-    let chiave=prompt("Inserisci l'ID del partecipante: ");
-
-    if (partecipante_map.has(chiave) && !gara_map.has(chiave))
+    let chiave=prompt("Inserisci l'ID del partecipante: "),contatore=1;
+    if(!(partecipante_map.has(chiave)))
     {
-        let tempo=casuale();
-        let partecipante=partecipante_map.get(chiave);
-        let gara=new Gara("100 metri",tempo,partecipante);
-        gara_map.set(chiave,gara);
-        stampaGara(gara);
-    } 
-    else
-    {
-        console.log("Partecipante non presente o già registrato in una gara!\n");
+        console.log("Partecipante non presente o partecipa già alla gara!");    return;
     }
+    let oggetto_gara=new Gara(tipo_gara,casuale(),partecipante_map.get(chiave));
+    gara_map.set(contatore,oggetto_gara); contatore++;
+    stampaGara(gara_map);
 }
 
-function duecento(gara_map,partecipante_map)
+function stampaGara(gara_map)
 {
-    let chiave=prompt("Inserisci l'ID del partecipante: ");
-
-    if (partecipante_map.has(chiave) && !gara_map.has(chiave))
-    {
-        let tempo=casuale();
-        let partecipante=partecipante_map.get(chiave);
-        let gara=new Gara("200 metri",tempo,partecipante);
-        gara_map.set(chiave,gara);
-        stampaGara(gara);
-    } 
-    else
-    {
-        console.log("Partecipante non presente o già registrato in una gara!\n");
-    }
+    console.log("Tipo di gara: ",gara_map.tipo_gara);
+    console.log("Gara_map ",gara_map);
 }
 
-function stampaGara(gara)
+function r_gare(partecipante_map,gara_map)
 {
-    console.log("Tipo di gara: ",gara.tipo_gara);
-    console.log("Tempo: ",gara.tempo+" secondi");
-    console.log("Partecipante: ",gara.partecipante.nome,gara.partecipante.cognome);
-}
-
-function r_gare(partecipante_map, gara_map)
-{
-    let scelta;
-    do 
+    let scelta,tipo_gara;
+    do
     {
-        console.log("\nTIPO DI GARA\n");
-        console.log("0 - Esci");
-        console.log("1 - 100 metri");
-        console.log("2 - 200 metri");
-        scelta=parseInt(prompt(">> "));
-        switch(scelta)
-        {
-            case 1: cento(gara_map, partecipante_map); break;
-            case 2: duecento(gara_map, partecipante_map); break;
-        }
-        scelta=parseInt(prompt("\n1 - Continua inserimento\n2 - Esci inserimento \n>> "));
-    }while(scelta!==2);
+        tipo_gara=prompt("\nGARA\nInserisci il tipo di gara: ");
+        r2_gara(tipo_gara,partecipante_map,gara_map);
+        scelta=prompt("\nsi per continuare ad inserire;\nno per uscire;\n");
+    }while(scelta.toLowerCase()!=="no");    
 }
 
 function classifica(partecipante_map,gara_map)
@@ -187,6 +146,7 @@ function main()
     let scelta;
     let partecipante_map=new Map();
     let gara_map=new Map();
+    let classifica_map=new Map();
     console.log("Calcolatore di statistiche campionato di atletica leggera\n");
     do
     {
