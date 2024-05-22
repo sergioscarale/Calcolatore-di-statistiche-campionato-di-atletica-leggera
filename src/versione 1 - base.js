@@ -1,8 +1,4 @@
-const prompt = require("prompt-sync")();
-
-const fs = require('fs');
-let controlloc = 0;
-let controllod = 0;
+const prompt=require("prompt-sync")();
 
 /**
  *@author  Sergio Scarale,Matteo De Bonis,Davide Cocomazzi,Biagio Piazza
@@ -101,22 +97,6 @@ function casuale()
  */
 function cento(gara_map,partecipante_map)
 {
-    let scrivi;
-    if(controlloc==0)
-    {
-        scrivi="100 metri\n";
-        fs.appendFile('classifica.txt', scrivi, err => {
-            if(err)
-                {
-                    console.log(err);
-                    return;
-                }   
-        });
-        controlloc++;
-    }
-    
-    
-
     let chiave=prompt("Inserisci l'ID del partecipante: ");
 
     if (partecipante_map.has(chiave) && !gara_map.has(chiave))
@@ -124,9 +104,8 @@ function cento(gara_map,partecipante_map)
         let tempo=casuale();
         let partecipante=partecipante_map.get(chiave);
         let gara=new Gara("100 metri",tempo,partecipante);
-        gara_map.set(chiave,gara); 
-        
-        
+        gara_map.set(chiave,gara);
+        stampaGara(gara);
     } 
     else
     {
@@ -136,20 +115,6 @@ function cento(gara_map,partecipante_map)
 
 function duecento(gara_map,partecipante_map)
 {
-    let scrivi;
-    if(controllod==0)
-    {
-        scrivi="200 metri\n";
-        fs.appendFile('classifica.txt', scrivi, err => {
-            if(err)
-                {
-                    console.log(err);
-                    return;
-                }   
-        });
-        controllod++;
-    }
-    
     let chiave=prompt("Inserisci l'ID del partecipante: ");
 
     if (partecipante_map.has(chiave) && !gara_map.has(chiave))
@@ -158,12 +123,19 @@ function duecento(gara_map,partecipante_map)
         let partecipante=partecipante_map.get(chiave);
         let gara=new Gara("200 metri",tempo,partecipante);
         gara_map.set(chiave,gara);
-        
+        stampaGara(gara);
     } 
     else
     {
         console.log("Partecipante non presente o già registrato in una gara!\n");
     }
+}
+
+function stampaGara(gara)
+{
+    console.log("Tipo di gara: ",gara.tipo_gara);
+    console.log("Tempo: ",gara.tempo+" secondi");
+    console.log("Partecipante: ",gara.partecipante.nome,gara.partecipante.cognome);
 }
 
 function r_gare(partecipante_map, gara_map)
@@ -205,23 +177,13 @@ function classifica(partecipante_map,gara_map)
 
     classificaArray.forEach((corridore,posizione)=>
     {
-        scrivi=`${posizione + 1}. ${corridore.nome} ${corridore.cognome} - Tempo: ${corridore.tempo} secondi`;
-        fs.appendFile('classifica.txt', scrivi+"\n", err => {
-        if(err)
-        {
-            console.log(err);
-            return;
-        }   
+        console.log(`${posizione + 1}. ${corridore.nome} ${corridore.cognome} - Tempo: ${corridore.tempo} secondi`);
     });
- });
-
-
-    
+    console.log("\n");
 }
 
 function main()
 {
-    
     let scelta;
     let partecipante_map=new Map();
     let gara_map=new Map();
