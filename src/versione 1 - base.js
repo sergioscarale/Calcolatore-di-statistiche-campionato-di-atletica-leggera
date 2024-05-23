@@ -87,42 +87,62 @@ function casuale()
     return tempo.toFixed(2);
 }
 
-function r2_gara(tipo_gara, partecipante_map, gara_map, r2_set)
+function controllo_gara(tipo_gara, partecipante_map, gara_map, r2_set)
 {
     let chiave=prompt("Inserisci l'ID del partecipante: ");
-    if (!(partecipante_map.has(chiave)))
+    if(partecipante_map.has(chiave))
     {
-        console.log("Partecipante non presente o partecipa già alla gara!");
+        let partecipante=partecipante_map.get(chiave);
+        let iscritto=Array.from(gara_map.values()).some(gara=>gara.partecipante===partecipante && gara.tipo_gara===tipo_gara);
+        if(!iscritto)
+        {
+            let oggetto_gara=new Gara(tipo_gara,casuale(),partecipante);
+            gara_map.set(chiave+"-"+tipo_gara,oggetto_gara);
+        } 
+        else
+        {
+            console.log("Il partecipante ha già partecipato a una gara di questo tipo.");
+        }
+    } 
+    else 
+    {
+        console.log("Partecipante non presente!");
+    }
+}
+
+function r_gare(partecipante_map, gara_map, r2_set)
+{
+    let scelta, tipo_gara;
+    console.log("\nGARA\n");
+    tipo_gara=prompt("Inserisci il tipo di gara: ");
+    // Verifica se il tipo di gara è già stato registrato perchè if(!gara_map.has(tipo_gara)) non va
+    let garaRegistrata=Array.from(gara_map.values()).map(gara=>gara.tipo_gara);
+    if(!garaRegistrata.includes(tipo_gara))
+    {
+        do 
+        {
+            controllo_gara(tipo_gara, partecipante_map, gara_map, r2_set);
+            console.log("\nsi per continuare ad inserire;\nno per uscire;\n");
+            scelta=prompt(">> ");
+        }while(scelta.toLowerCase()!=="no");
+        stampaGara(gara_map);
+    }
+    else
+    {
+        console.log("Tipo di gara già inserito!");
         return;
     }
-    let oggetto_gara=new Gara(tipo_gara,casuale(),partecipante_map.get(chiave));
-    gara_map.set(chiave,oggetto_gara);
-    r2_set.add(partecipante_map.get(chiave));
 }
 
 function stampaGara(gara_map)
 {
     console.log("Gara_map:");
-    gara_map.forEach((gara, chiave) =>
-    {
-        console.log(`ID Partecipante: ${chiave}`);
+    gara_map.forEach((gara, chiave) => {
+        console.log(`ID Partecipante e Tipo di Gara: ${chiave}`);
         console.log(`Tipo di gara: ${gara.tipo_gara}`);
         console.log(`Tempo: ${gara.tempo}`);
         console.log(`Partecipante: ${gara.partecipante.nome} ${gara.partecipante.cognome}`);
     });
-}
-
-function r_gare(partecipante_map, gara_map, r2_set)
-{
-    let scelta,tipo_gara;
-    console.log("\nGARA\n");
-    tipo_gara=prompt("Inserisci il tipo di gara: ");
-    do
-    {
-        r2_gara(tipo_gara,partecipante_map,gara_map, r2_set);
-        scelta=prompt("\nsi per continuare ad inserire;\nno per uscire;\n");
-    }while(scelta.toLowerCase()!=="no");
-    stampaGara(gara_map);
 }
 
 function classifica(gara_map,classificaPerTipo)
@@ -145,7 +165,7 @@ function classifica(gara_map,classificaPerTipo)
         });
     });
 
-    //Ordinameto e stampa classifica per ogni tipo di gara
+    //Ordinamento e stampa classifica per ogni tipo di gara
     for(const tipo_gara in classificaPerTipo)
     {
         console.log(`Classifica per: ${tipo_gara}`);
@@ -163,7 +183,6 @@ function main()
     let scelta;
     let partecipante_map=new Map();
     let gara_map=new Map();
-    let classifica_map=new Map();
     let r2_set=new Set();
     let classificaPerTipo={};
     console.log("Calcolatore di statistiche campionato di atletica leggera\n");
