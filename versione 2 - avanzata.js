@@ -185,23 +185,30 @@ function classifica(gara_map,classificaPerTipo)
 
 function calcoloMedia(gara_map)
 {
-    let sommaTempi=0,mediaTempi=0,conteggioTotale=0;
-    gara_map.forEach(gara => 
+    const mediaTipoGara={};
+    gara_map.forEach(gara=>
                     {
-                        sommaTempi+=parseFloat(gara.tempo);
-                        conteggioTotale++;
+                        const tipoGara=gara.tipo_gara;
+                        if(!mediaTipoGara[tipoGara])
+                        {
+                            mediaTipoGara[tipoGara]=
+                            {
+                                sommaTempi: 0,
+                                conteggioGare: 0
+                            }
+                        }
+                        mediaTipoGara[tipoGara].sommaTempi+=parseFloat(gara.tempo);
+                        mediaTipoGara[tipoGara].conteggioGare++;
                     })
-    if(conteggioTotale!==0)
+    console.log("\nMEDIE TEMPI PER OGNI TIPO DI GARA\n");
+    for(let tipoGara in mediaTipoGara)
     {
-        mediaTempi=sommaTempi/conteggioTotale;
-        console.log(`\nLa media dei tempi è: ${mediaTempi.toFixed(2)} secondi`);
-    }
-    else
-    {
-        console.log("\nNon è stato registrato alcun tempo!");
+        let sommaTempi=mediaTipoGara[tipoGara].sommaTempi;
+        let conteggioGare=mediaTipoGara[tipoGara].conteggioGare;
+        let media=sommaTempi/conteggioGare;
+        console.log(`${tipoGara}: ${media.toFixed(2)} secondi\n`);
     }
 }
-    
 
 function main()
 {
