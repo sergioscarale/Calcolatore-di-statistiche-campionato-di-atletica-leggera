@@ -56,6 +56,16 @@ class Gara
  */
 function r_dati(partecipante_map)
 {
+
+    console.clear();
+
+    console.log(
+        " _____ _____ _____ _____ _____ _____ _____ _____ _____ _____ _____ _____ _____ \n" +
+        "| __  |   __|   __|     |   __|_   _| __  |  _  |__   |     |     |   | |   __|\n" +
+        "|    -|   __|  |  |-   -|__   | | | |    -|     |   __|-   -|  |  | | | |   __|\n" +
+        "|__|__|_____|_____|_____|_____| |_| |__|__|__|__|_____|_____|_____|_|___|_____|\n"
+    );
+
     let chiave=prompt("Inserisci l'ID del partecipante: ");
 
     if(!partecipante_map.has(chiave))
@@ -79,11 +89,11 @@ function r_dati(partecipante_map)
  * Genera un tempo casuale per una gara.
  * @function
  * @returns {string} Il tempo generato per la gara.
- * @description Genera un tempo casuale per una gara tra 9.5 e 11 secondi.
+ * @description Genera un tempo casuale per una gara tra 9.6 e 30 secondi.
  */
 function casuale()
 {
-    let tempo=9.5+Math.random()*(11-9.5);
+    let tempo=9.6+Math.random()*(30-9.6);
     return tempo.toFixed(2);
 }
 
@@ -149,8 +159,10 @@ function classifica(gara_map,classificaPerTipo)
 {
     console.log("\nCLASSIFICA\n");
 
-    //Oggetto per il tipo di gara (100m,200m,400m...) con i partecipanti e i tempi
-    gara_map.forEach((gara)=>
+    //Resetta l'oggetto classificaPerTipo per evitare duplicazioni
+    Object.keys(classificaPerTipo).forEach(key=>delete classificaPerTipo[key]);
+
+    gara_map.forEach((gara)=> 
     {
         const tipo_gara=gara.tipo_gara;
         if(!classificaPerTipo[tipo_gara])
@@ -158,19 +170,18 @@ function classifica(gara_map,classificaPerTipo)
             classificaPerTipo[tipo_gara]=[];
         }
         classificaPerTipo[tipo_gara].push(
-        { 
+        {
             nome: gara.partecipante.nome,
             cognome: gara.partecipante.cognome,
             tempo: parseFloat(gara.tempo)
         });
     });
 
-    //Ordinamento e stampa classifica per ogni tipo di gara
     for(const tipo_gara in classificaPerTipo)
     {
         console.log(`Classifica per: ${tipo_gara}`);
-        classificaPerTipo[tipo_gara].sort((a, b)=>a.tempo-b.tempo);
-        classificaPerTipo[tipo_gara].forEach((corridore,posizione) =>
+        classificaPerTipo[tipo_gara].sort((a, b) => a.tempo - b.tempo);
+        classificaPerTipo[tipo_gara].forEach((corridore, posizione)=> 
         {
             console.log(`${posizione + 1}. ${corridore.nome} ${corridore.cognome} - Tempo: ${corridore.tempo} secondi`);
         });
@@ -180,6 +191,7 @@ function classifica(gara_map,classificaPerTipo)
 
 function main()
 {
+    console.clear();
     let scelta;
     let partecipante_map=new Map();
     let gara_map=new Map();
@@ -188,7 +200,12 @@ function main()
     console.log("Calcolatore di statistiche campionato di atletica leggera\n");
     do
     {
-        console.log("VERSIONE 1 - Base");
+        console.log(
+            " _____ _____ _____ _____ _____ _____ _____ _____    ___            _____             \n" +
+            "|  |  |   __| __  |   __|     |     |   | |   __|  |_  |    ___   | __  |___ ___ ___ \n" +
+            "|  |  |   __|    -|__   |-   -|  |  | | | |   __|   _| |_  |___|  | __ -| .'|_ -| -_|\n" +
+            " \\___/|_____|__|__|_____|_____|_____|_|___|_____|  |_____|        |_____|__,|___|___|\n"
+        );                                                                         
         console.log("0 - Esci;");
         console.log("1 - Registrazione dei principali dati anagrafici dei giocatori;");
         console.log("2 - Registrazione delle singole gare e dei relativi partecipanti;");
