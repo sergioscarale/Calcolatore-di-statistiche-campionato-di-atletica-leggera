@@ -216,6 +216,14 @@ function calcoloMedia(gara_map)
     }
 }
 
+/**
+ * @param {let} scelta -Per gestire le azioni del menù.
+ * @param {Map<string partecipante_map} partecipante_map -Registra i partecipanti
+ * @param {Map<string gara_map} gara_map -Lista dei partecipanti della gara
+ * @param {Set<string r2_set} r2_set 
+ * @param {let} classificaPerTipo -Contiene la classifica per ogni tipo di gara
+ * @description Questa funzione, è la funzione principale del programma, dove andremo a decidere cosa fare.
+ */
 function main()
 {
     console.clear();
