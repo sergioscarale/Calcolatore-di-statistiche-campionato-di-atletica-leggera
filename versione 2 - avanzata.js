@@ -56,16 +56,7 @@ class Gara
  */
 function r_dati(partecipante_map)
 {
-
     console.clear();
-
-    console.log(
-        " _____ _____ _____ _____ _____ _____ _____ _____ _____ _____ _____ _____ _____ \n" +
-        "| __  |   __|   __|     |   __|_   _| __  |  _  |__   |     |     |   | |   __|\n" +
-        "|    -|   __|  |  |-   -|__   | | | |    -|     |   __|-   -|  |  | | | |   __|\n" +
-        "|__|__|_____|_____|_____|_____| |_| |__|__|__|__|_____|_____|_____|_|___|_____|\n"
-    );
-
     let chiave=prompt("Inserisci l'ID del partecipante: ");
 
     if(!partecipante_map.has(chiave))
@@ -97,7 +88,7 @@ function casuale()
     return tempo.toFixed(2);
 }
 
-function controllo_gara(tipo_gara, partecipante_map, gara_map, r2_set)
+function controllo_gara(tipo_gara, partecipante_map, gara_map)
 {
     let chiave=prompt("Inserisci l'ID del partecipante: ");
     if(partecipante_map.has(chiave))
@@ -120,11 +111,13 @@ function controllo_gara(tipo_gara, partecipante_map, gara_map, r2_set)
     }
 }
 
-function r_gare(partecipante_map, gara_map, r2_set)
+function r_gare(partecipante_map, gara_map)
 {
+    console.clear();
     let scelta, tipo_gara;
     console.log("\nGARA\n");
-    tipo_gara=prompt("Inserisci il tipo di gara: ");
+
+    /* CHIEDERE
     // Verifica se il tipo di gara è già stato registrato perchè if(!gara_map.has(tipo_gara)) non va
     let garaRegistrata=Array.from(gara_map.values()).map(gara=>gara.tipo_gara);
     if(!garaRegistrata.includes(tipo_gara))
@@ -142,6 +135,16 @@ function r_gare(partecipante_map, gara_map, r2_set)
         console.log("Tipo di gara già inserito!");
         return;
     }
+    */
+   
+    tipo_gara=prompt("Inserisci il tipo di gara: ");
+    do 
+    {
+        controllo_gara(tipo_gara, partecipante_map, gara_map);
+        console.log("\n- si per continuare ad inserire;\n- no per uscire;\n");
+        scelta=prompt(">> ");
+    }while(scelta.toLowerCase()!=="no");
+    stampaGara(gara_map);
 }
 
 function stampaGara(gara_map)
@@ -157,12 +160,13 @@ function stampaGara(gara_map)
 
 function classifica(gara_map,classificaPerTipo)
 {
+    console.clear();
     console.log("\nCLASSIFICA\n");
 
     //Resetta l'oggetto classificaPerTipo per evitare duplicazioni
     Object.keys(classificaPerTipo).forEach(key=>delete classificaPerTipo[key]);
 
-    gara_map.forEach((gara)=> 
+    gara_map.forEach((gara)=>
     {
         const tipo_gara=gara.tipo_gara;
         if(!classificaPerTipo[tipo_gara])
@@ -191,6 +195,7 @@ function classifica(gara_map,classificaPerTipo)
 
 function calcoloMedia(gara_map)
 {
+    console.clear();
     const mediaTipoGara={};
     gara_map.forEach(gara=>
                     {
@@ -216,13 +221,98 @@ function calcoloMedia(gara_map)
     }
 }
 
+function visualizzaStatistiche(gara_map) 
+{
+    console.clear();
+    const statistichePerPartecipante=new Map();
+
+    // Ottengo le statistiche di ogni partecipante
+    gara_map.forEach(gara=> 
+    {
+        const chiave=`${gara.partecipante.nome} ${gara.partecipante.cognome}`;
+        if (!statistichePerPartecipante.has(chiave)) {
+            statistichePerPartecipante.set(chiave, {
+                vinte: 0,
+                podio: 0,
+                fuoriPodio: 0,
+                totali: 0
+            });
+        }
+    });
+
+    // Calcola classifica per ogni tipo di gara e aggiorna statistiche
+    const classificaPerTipo={};
+    gara_map.forEach(gara => 
+    {
+        const tipoGara=gara.tipo_gara;
+        if(!classificaPerTipo[tipoGara]) 
+        {
+            classificaPerTipo[tipoGara]=[];
+        }
+        classificaPerTipo[tipoGara].push(
+        {
+            partecipante: gara.partecipante,
+            tempo: parseFloat(gara.tempo)
+        });
+    });
+
+    Object.keys(classificaPerTipo).forEach(tipoGara=>
+    {
+        classificaPerTipo[tipoGara].sort((a,b)=>a.tempo-b.tempo);
+        classificaPerTipo[tipoGara].forEach((persona,posizione)=> 
+        {
+            let chiave=`${persona.partecipante.nome} ${persona.partecipante.cognome}`;
+            let stats=statistichePerPartecipante.get(chiave);
+            stats.totali++;
+
+            // Incrementa vinte e podio quando vince
+            if(posizione===0) 
+            {
+                stats.vinte++;
+                stats.podio++;
+            }
+            // Incrementa podio per le posizioni 2 e 3
+            else if(posizione<=2) 
+            {
+                stats.podio++;
+            } 
+            // Incrementa fuoriPodio se non rientri tra le prime 3 posizioni
+            else
+            {
+                stats.fuoriPodio++;
+            }
+            statistichePerPartecipante.set(chiave, stats);
+        });
+    });
+
+    // Calcolo delle percentuali
+    statistichePerPartecipante.forEach((stats,chiave)=> 
+    {
+        stats.percentualeVittorie=(stats.vinte/stats.totali)*100;
+        stats.percentualePodi=(stats.podio/stats.totali)*100;
+        stats.percentualeFuoriPodio=(stats.fuoriPodio/stats.totali)*100;
+    });
+
+    // Stampa delle statistiche
+    console.log("\nSTATISTICHE DEI GIOCATORI\n");
+
+    statistichePerPartecipante.forEach((stat, giocatore)=> 
+    {
+        console.log(`${giocatore}: `);
+        console.log(`- Gare totali: ${stat.totali}`);
+        console.log(`- Gare vinte: ${stat.vinte}, ${stat.percentualeVittorie.toFixed(2)}%`);
+        console.log(`- Piazzamenti a podio: ${stat.podio}, ${stat.percentualePodi.toFixed(2)}%`);
+        console.log(`- Piazzamenti fuori podio: ${stat.fuoriPodio}, ${stat.percentualeFuoriPodio.toFixed(2)}%`);
+        console.log("");
+    });
+}
+
 function main()
 {
     console.clear();
     let scelta;
     let partecipante_map=new Map();
     let gara_map=new Map();
-    let r2_set=new Set();
     let classificaPerTipo={};
     console.log("Calcolatore di statistiche campionato di atletica leggera\n");
     do
@@ -231,16 +321,18 @@ function main()
         console.log("0 - Esci;");
         console.log("1 - Registrazione dei principali dati anagrafici dei giocatori;");
         console.log("2 - Registrazione delle singole gare e dei relativi partecipanti;");
-        console.log("3 - Creazione ed aggiornamento della classifica di campionato.");
-        console.log("4 - Il calcolo della media dei punteggi.\n");
+        console.log("3 - Creazione ed aggiornamento della classifica di campionato;");
+        console.log("4 - Il calcolo della media dei punteggi;");
+        console.log("5 - La visualizzazione della percentuale di gare vinte, dei piazzamenti a podio e fuori dal podio di ogni giocatore.\n");
         scelta=parseInt(prompt(">> "));
         switch (scelta)
         {
             case 0: console.log("\n\nciap ciap"); break;
             case 1: r_dati(partecipante_map); break;
-            case 2: r_gare(partecipante_map, gara_map,r2_set); break;
+            case 2: r_gare(partecipante_map, gara_map); break;
             case 3: classifica(gara_map,classificaPerTipo); break;
             case 4: calcoloMedia(gara_map); break;
+            case 5: visualizzaStatistiche(gara_map); break;
         }
     }while(scelta!==0);
 }
