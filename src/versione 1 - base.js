@@ -5,7 +5,7 @@ const prompt=require("prompt-sync")();
 */
 
 /**
- * Classe che crea l'oggetto partecipante
+ * @description - Classe che crea l'oggetto partecipante
  * @class
  */
 class Partecipante
@@ -29,7 +29,7 @@ class Partecipante
 }
 
 /**
- * Classe che rappresenta una gara.
+ * @description - Classe che rappresenta una gara.
  * @class
  */
 class Gara
@@ -37,7 +37,7 @@ class Gara
     constructor(tipo_gara,tempo,partecipante)
     {
         /**
-         * Crea una gara.
+         * @description - Crea una gara.
          * @constructs Gara
          * @param {string} tempo - Il tempo impiegato per completare la gara.
          * @param {Partecipante} partecipante - Il partecipante alla gara.
@@ -49,7 +49,7 @@ class Gara
 }
 
 /**
- * Registra i dati di un partecipante.
+ * @description - Registra i dati di un partecipante.
  * @function
  * @param {Map<string, Partecipante>} partecipante_map - La mappa dei partecipanti.
  * @description Registra un partecipante chiedendo all'utente i dettagli del partecipante e aggiungendo il partecipante alla mappa.
@@ -86,10 +86,9 @@ function r_dati(partecipante_map)
 }
 
 /**
- * Genera un tempo casuale per una gara.
- * @function
- * @returns {string} Il tempo generato per la gara.
  * @description Genera un tempo casuale per una gara tra 9.6 e 30 secondi.
+ * @function
+ * @returns {string} - Il tempo generato per la gara.
  */
 function casuale()
 {
@@ -97,6 +96,14 @@ function casuale()
     return tempo.toFixed(2);
 }
 
+/**
+ * @description Funzione per controllare e registrare la partecipazione di un giocatore a una gara.
+ * @function
+ * @param {string} tipo_gara - Il tipo di gara 
+ * @param {Map} partecipante_map - Mappa dei partecipanti con ID come chiave e oggetto partecipante come valore.
+ * @param {Map} gara_map - Mappa delle gare con ID del partecipante e tipo di gara come chiave e oggetto gara come valore
+ * @param {Set} r2_set 
+ */
 function controllo_gara(tipo_gara, partecipante_map, gara_map, r2_set)
 {
     let chiave=prompt("Inserisci l'ID del partecipante: ");
@@ -120,6 +127,13 @@ function controllo_gara(tipo_gara, partecipante_map, gara_map, r2_set)
     }
 }
 
+/**
+ * @description - Funzione per registrare le gare per un tipo di gara specifico.
+ * @param {*} partecipante_map - Mappa dei partecipanti con ID come chiave e oggetto partecipante come valore 
+ * @param {*} gara_map - Mappa delle gare con ID del partecipante e tipo di gara come chiave e oggetto gara come valore.
+ * @param {*} r2_set 
+ * @returns 
+ */
 function r_gare(partecipante_map, gara_map, r2_set)
 {
     let scelta, tipo_gara;
@@ -144,6 +158,10 @@ function r_gare(partecipante_map, gara_map, r2_set)
     }
 }
 
+/**
+ * @description - Funzione per stampare le gare registrate.
+ * @param {Map} gara_map - Mappa delle gare con ID del partecipante e tipo di gara come chiave e oggetto gara come valore.
+ */
 function stampaGara(gara_map)
 {
     console.log("Gara_map:");
@@ -155,6 +173,12 @@ function stampaGara(gara_map)
     });
 }
 
+/**
+ * @description - Funzione per creare e aggiornare la classifica delle gare.
+ * @function
+ * @param {Map} gara_map - Mappa delle gare con ID del partecipante e tipo di gara come chiave e oggetto gara come valore.
+ * @param {Object} classificaPerTipo - Oggetto contenente le classifiche delle gare per tipo di gara.
+ */
 function classifica(gara_map,classificaPerTipo)
 {
     console.log("\nCLASSIFICA\n");
@@ -188,7 +212,15 @@ function classifica(gara_map,classificaPerTipo)
         console.log("\n");
     }
 }
-
+/**
+ * @description - Funzione principale che gestisce il flusso del programma.
+ * @function
+ * @param {let} scelta - Per decidere dove andrà il flusso.
+ * @param {Map} partecipante_map - Mappa dei partecipanti con ID come chiave e oggetto partecipante come valore.
+ * @param {Map} gara_map - Mappa delle gare con ID del partecipante e tipo di gara come chiave e oggetto gara come valore.
+ * @param {Set} r2_set - 
+ * @param {let} classificaPerTipo - Oggetto contenente le classifiche delle gare per tipo di gara.
+ */
 function main()
 {
     console.clear();
