@@ -5,7 +5,7 @@ const prompt=require("prompt-sync")();
 */
 
 /**
- * Classe che crea l'oggetto partecipante
+ * @description - Classe che crea l'oggetto partecipante
  * @class
  */
 class Partecipante
@@ -49,10 +49,9 @@ class Gara
 }
 
 /**
- * Registra i dati di un partecipante.
+ * @description - Registra un partecipante chiedendo all'utente i dettagli del partecipante e aggiungendo il partecipante alla mappa.
  * @function
- * @param {Map<string, Partecipante>} partecipante_map - La mappa dei partecipanti.
- * @description Registra un partecipante chiedendo all'utente i dettagli del partecipante e aggiungendo il partecipante alla mappa.
+ * @param {Map} partecipante_map - La mappa dei partecipanti.
  */
 function r_dati(partecipante_map)
 {
@@ -77,10 +76,9 @@ function r_dati(partecipante_map)
 }
 
 /**
- * Genera un tempo casuale per una gara.
+ * @description - Genera un tempo casuale per una gara tra 9.6 e 30 secondi.
  * @function
- * @returns {string} Il tempo generato per la gara.
- * @description Genera un tempo casuale per una gara tra 9.6 e 30 secondi.
+ * @returns {string} - Il tempo generato per la gara.
  */
 function casuale()
 {
@@ -88,6 +86,13 @@ function casuale()
     return tempo.toFixed(2);
 }
 
+/**
+ * @description - Controlla la partecipazione di un utente a una gara e la registra se non è già iscritto.
+ * @function
+ * @param {string} tipo_gara - Il tipo di gara.
+ * @param {Map} partecipante_map - Mappa dei partecipanti.
+ * @param {Map} gara_map - Mappa delle gare.
+ */
 function controllo_gara(tipo_gara, partecipante_map, gara_map)
 {
     let chiave=prompt("Inserisci l'ID del partecipante: ");
@@ -111,6 +116,12 @@ function controllo_gara(tipo_gara, partecipante_map, gara_map)
     }
 }
 
+/**
+ * @description - Questa funzione gestisce la registrazione delle gare per un tipo specificato. L'utente può inserire più gare dello stesso tipo fino a quando non decide di uscire.
+ * @function
+ * @param {Map} partecipante_map - Mappa dei partecipanti.
+ * @param {Map} gara_map - Mappa delle gare.
+ */
 function r_gare(partecipante_map, gara_map)
 {
     console.clear();
@@ -147,6 +158,11 @@ function r_gare(partecipante_map, gara_map)
     stampaGara(gara_map);
 }
 
+/**
+ * @description - Questa funzione stampa le informazioni relative alle gare presenti nella mappa delle gare.
+ * @function
+ * @param {Map} gara_map 
+ */
 function stampaGara(gara_map)
 {
     console.log("Gara_map:");
@@ -158,6 +174,12 @@ function stampaGara(gara_map)
     });
 }
 
+/**
+ * @description - Questa funzione calcola e stampa la classifica per ogni tipo di gara.
+ * @function
+ * @param {Map} gara_map 
+ * @param {*} classificaPerTipo 
+ */
 function classifica(gara_map,classificaPerTipo)
 {
     console.clear();
@@ -193,6 +215,11 @@ function classifica(gara_map,classificaPerTipo)
     }
 }
 
+/**
+ * @description - Questa funzione calcola e stampa la media dei tempi per ogni tipo di gara.
+ * @function
+ * @param {Map} gara_map - Mappa delle gare.
+ */
 function calcoloMedia(gara_map)
 {
     console.clear();
@@ -221,6 +248,11 @@ function calcoloMedia(gara_map)
     }
 }
 
+/**
+ * @description - Questa funzione calcola e visualizza le statistiche dei partecipanti alle gare.
+ * @function
+ * @param {Map} gara_map 
+ */
 function visualizzaStatistiche(gara_map) 
 {
     console.clear();
@@ -307,12 +339,32 @@ function visualizzaStatistiche(gara_map)
     });
 }
 
+
+/**
+ * @description - Funzione principale che gestisce il menu e l'esecuzione delle altre funzioni.
+ * @function
+ */
 function main()
 {
     console.clear();
+    /**
+     * @type {number} - Variabile per memorizzare la scelta dell'utente.
+     */
     let scelta;
+
+    /**
+     * @type {Map} - Mappa dei partecipanti.
+     */
     let partecipante_map=new Map();
+
+    /**
+     * @type {Map} - Mappa delle gare.
+     */
     let gara_map=new Map();
+
+    /**
+     * @type {object} - Oggetto contenente le classifiche per tipo di gara.
+     */
     let classificaPerTipo={};
     console.log("Calcolatore di statistiche campionato di atletica leggera\n");
     do

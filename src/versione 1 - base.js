@@ -129,9 +129,9 @@ function controllo_gara(tipo_gara, partecipante_map, gara_map, r2_set)
 
 /**
  * @description - Funzione per registrare le gare per un tipo di gara specifico.
- * @param {*} partecipante_map - Mappa dei partecipanti con ID come chiave e oggetto partecipante come valore 
- * @param {*} gara_map - Mappa delle gare con ID del partecipante e tipo di gara come chiave e oggetto gara come valore.
- * @param {*} r2_set 
+ * @param {Map} partecipante_map - Mappa dei partecipanti con ID come chiave e oggetto partecipante come valore 
+ * @param {Map} gara_map - Mappa delle gare con ID del partecipante e tipo di gara come chiave e oggetto gara come valore.
+ * @param {Set} r2_set 
  * @returns 
  */
 function r_gare(partecipante_map, gara_map, r2_set)
