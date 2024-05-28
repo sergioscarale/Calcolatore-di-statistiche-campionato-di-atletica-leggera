@@ -266,10 +266,19 @@ function classifica(gara_map,classificaPerTipo)
 function main()
 {
     console.clear();
+    /** @type {string} */
     let scelta;
+
+    /** @type {Map<string, Partecipante>} */
     let partecipante_map=new Map();
+
+    /** @type {Map<string, Gara} */
     let gara_map=new Map();
+
+    /** @type {Set<string>} */
     let r2_set=new Set();
+
+    /** @type {Object.<string, {nome: string, cognome:string, tempo:numer}[]>} */
     let classificaPerTipo={};
     console.log("Calcolatore di statistiche campionato di atletica leggera\n");
     do
@@ -295,4 +304,5 @@ function main()
     }while(scelta!==0);
 }
 
+//Avvia il programma principale
 main();
