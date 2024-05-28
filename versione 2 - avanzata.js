@@ -5,13 +5,12 @@ const prompt=require("prompt-sync")();
 */
 
 /**
- * @description - Classe che crea l'oggetto partecipante
+ * @description Classe che crea l'oggetto partecipante
  * @class
  */
 class Partecipante
 {
     /**
-     * 
      * @param {string} nome - Il nome del partecipante
      * @param {string} cognome - Il cognome del partecipante
      * @param {string} sesso - Il sesso del partecipante
@@ -29,7 +28,7 @@ class Partecipante
 }
 
 /**
- * Classe che rappresenta una gara.
+ * @description Classe che rappresenta una gara.
  * @class
  */
 class Gara
@@ -48,6 +47,78 @@ class Gara
     }
 }
 
+function controlloId()
+{
+    while(true)
+    {
+        console.log("\nInserisci l'ID del partecipante (solo numeri) ")
+        chiave=prompt(">> ");
+        let controllo_chiave=true;
+        for(let i=0;i<chiave.length;i++)
+        {
+            if(chiave.charAt(i)<'0' || chiave.charAt(i)>'9')
+            {
+                controllo_chiave=false; break;
+            }
+        }
+        if(controllo_chiave && chiave.trim()!=="")
+        {
+            break;
+        }
+        else
+        {
+            console.log("L'ID dev'essere un numero!");
+        }
+    }
+    return chiave;
+}
+
+function controlloSpazioVuoto(variabile)
+{
+    if(variabile.trim()==="")
+    {  
+        console.log("Inserimento non valido!\n")
+        return true;
+    }
+    return false;
+}
+
+function controlloId()
+{
+    while(true)
+    {
+        console.log("\nInserisci l'ID del partecipante (solo numeri) ")
+        chiave=prompt(">> ");
+        let controllo_chiave=true;
+        for(let i=0;i<chiave.length;i++)
+        {
+            if(chiave.charAt(i)<'0' || chiave.charAt(i)>'9')
+            {
+                controllo_chiave=false; break;
+            }
+        }
+        if(controllo_chiave && chiave.trim()!=="")
+        {
+            break;
+        }
+        else
+        {
+            console.log("L'ID dev'essere un numero!");
+        }
+    }
+    return chiave;
+}
+
+function controlloSpazioVuoto(variabile)
+{
+    if(variabile.trim()==="")
+    {  
+        console.log("Inserimento non valido!\n")
+        return true;
+    }
+    return false;
+}
+
 /**
  * @description - Registra un partecipante chiedendo all'utente i dettagli del partecipante e aggiungendo il partecipante alla mappa.
  * @function
@@ -56,15 +127,25 @@ class Gara
 function r_dati(partecipante_map)
 {
     console.clear();
-    let chiave=prompt("Inserisci l'ID del partecipante: ");
+    let chiave=controlloId();
 
     if(!partecipante_map.has(chiave))
     {
-        let nome=prompt("Nome: ");
+        let nome=prompt("Nome: ");          
+        if(controlloSpazioVuoto(nome)) return;
+        
         let cognome=prompt("Cognome: ");
+        if(controlloSpazioVuoto(cognome)) return;
+
         let sesso=prompt("Sesso: ");
+        if(controlloSpazioVuoto(sesso)) return;
+
         let data=prompt("Data di nascita: ");
+        if(controlloSpazioVuoto(data)) return;
+
         let nazionalita=prompt("Nazionalità: ");
+        if(controlloSpazioVuoto(nazionalita)) return;
+
         let partecipante=new Partecipante(nome,cognome,sesso,data,nazionalita);
         partecipante_map.set(chiave,partecipante);
         console.log("\nPartecipante iscritto correttamente!\n");
@@ -87,15 +168,17 @@ function casuale()
 }
 
 /**
- * @description - Controlla la partecipazione di un utente a una gara e la registra se non è già iscritto.
+ * Controlla la partecipazione a una gara
  * @function
- * @param {string} tipo_gara - Il tipo di gara.
- * @param {Map} partecipante_map - Mappa dei partecipanti.
- * @param {Map} gara_map - Mappa delle gare.
+ * @param {string} tipo_gara - Il tipo di gara
+ * @param {Map<string, Partecipante>} partecipante_map - La mappa dei partecipanti
+ * @param {Map<string, Gara>} gara_map - La mappa delle gare
+ * @description Controlla se un partecipante è già iscritto a una gara di un determinato tipo e, in caso contrario, lo iscrive.
  */
 function controllo_gara(tipo_gara, partecipante_map, gara_map)
 {
-    let chiave=prompt("Inserisci l'ID del partecipante: ");
+    let chiave;
+    chiave=controlloId();
     if(partecipante_map.has(chiave))
     {
         let partecipante=partecipante_map.get(chiave);
@@ -107,7 +190,7 @@ function controllo_gara(tipo_gara, partecipante_map, gara_map)
         } 
         else
         {
-            console.log("Il partecipante ha già partecipato a una gara di questo tipo.");
+            console.log("Il partecipante ha già partecipato a una gara di questo tipo.\n");
         }
     } 
     else 
@@ -117,56 +200,52 @@ function controllo_gara(tipo_gara, partecipante_map, gara_map)
 }
 
 /**
- * @description - Questa funzione gestisce la registrazione delle gare per un tipo specificato. L'utente può inserire più gare dello stesso tipo fino a quando non decide di uscire.
+ * Registra le gare
  * @function
- * @param {Map} partecipante_map - Mappa dei partecipanti.
- * @param {Map} gara_map - Mappa delle gare.
+ * @param {Map<string, Partecipante>} partecipante_map - La mappa dei partecipanti
+ * @param {Map<string, Gara>} gara_map - La mappa delle gare
+ * @description Registra le gare chiedendo all'utente i dettagli della gara e i partecipanti
  */
+
 function r_gare(partecipante_map, gara_map)
 {
     console.clear();
     let scelta, tipo_gara;
     console.log("\nGARA\n");
+    console.log("Inserisci il tipo di gara ");
+    tipo_gara=prompt(">> ");    if(controlloSpazioVuoto(tipo_gara)) return;
 
-    /* CHIEDERE
     // Verifica se il tipo di gara è già stato registrato perchè if(!gara_map.has(tipo_gara)) non va
     let garaRegistrata=Array.from(gara_map.values()).map(gara=>gara.tipo_gara);
     if(!garaRegistrata.includes(tipo_gara))
     {
-        do 
+        do
         {
-            controllo_gara(tipo_gara, partecipante_map, gara_map, r2_set);
-            console.log("\nsi per continuare ad inserire;\nno per uscire;\n");
+            controllo_gara(tipo_gara, partecipante_map, gara_map);
+            console.log("\n - si per continuare ad inserire;\n - no per uscire;\n");
             scelta=prompt(">> ");
         }while(scelta.toLowerCase()!=="no");
-        stampaGara(gara_map);
+        console.log("\n");
+        //stampaGara(gara_map);     nel caso volessimo vedere le tempistiche dei partecipanti o comunque per vedere coloro che abbiamo inserito nella gara
     }
     else
     {
-        console.log("Tipo di gara già inserito!");
+        console.log("Tipo di gara già inserito!\n");
         return;
     }
-    */
-   
-    tipo_gara=prompt("Inserisci il tipo di gara: ");
-    do 
-    {
-        controllo_gara(tipo_gara, partecipante_map, gara_map);
-        console.log("\n- si per continuare ad inserire;\n- no per uscire;\n");
-        scelta=prompt(">> ");
-    }while(scelta.toLowerCase()!=="no");
-    stampaGara(gara_map);
 }
 
 /**
- * @description - Questa funzione stampa le informazioni relative alle gare presenti nella mappa delle gare.
+ * Stampa le gare registrate.
  * @function
- * @param {Map} gara_map 
+ * @param {Map<string, Gara>} gara_map - La mappa delle gare
+ * @description Stampa tutte le gare registrate con i dettagli dei partecipanti
  */
 function stampaGara(gara_map)
 {
     console.log("Gara_map:");
-    gara_map.forEach((gara, chiave) => {
+    gara_map.forEach((gara, chiave) => 
+    {
         console.log(`ID Partecipante e Tipo di Gara: ${chiave}`);
         console.log(`Tipo di gara: ${gara.tipo_gara}`);
         console.log(`Tempo: ${gara.tempo}`);
@@ -175,10 +254,11 @@ function stampaGara(gara_map)
 }
 
 /**
- * @description - Questa funzione calcola e stampa la classifica per ogni tipo di gara.
+ * Crea e aggiorna la classifica del campionato
  * @function
- * @param {Map} gara_map 
- * @param {*} classificaPerTipo 
+ * @param {Map<string, Gara>} gara_map - La mappa delle gare
+ * @param {Object} classificaPerTipo - La classifica per tipo di gara
+ * @description Crea e aggiorna la classifica del campionato basata sui tempi delle varie gare
  */
 function classifica(gara_map,classificaPerTipo)
 {
@@ -262,8 +342,10 @@ function visualizzaStatistiche(gara_map)
     gara_map.forEach(gara=> 
     {
         const chiave=`${gara.partecipante.nome} ${gara.partecipante.cognome}`;
-        if (!statistichePerPartecipante.has(chiave)) {
-            statistichePerPartecipante.set(chiave, {
+        if(!statistichePerPartecipante.has(chiave)) 
+        {
+            statistichePerPartecipante.set(chiave, 
+            {
                 vinte: 0,
                 podio: 0,
                 fuoriPodio: 0,
@@ -379,7 +461,7 @@ function main()
         scelta=parseInt(prompt(">> "));
         switch (scelta)
         {
-            case 0: console.log("\n\nciap ciap"); break;
+            case 0: console.log("\nciap ciap\n"); break;
             case 1: r_dati(partecipante_map); break;
             case 2: r_gare(partecipante_map, gara_map); break;
             case 3: classifica(gara_map,classificaPerTipo); break;
