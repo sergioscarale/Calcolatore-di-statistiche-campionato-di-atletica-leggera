@@ -20,10 +20,19 @@ class Partecipante
      */
     constructor(nome,cognome,sesso,data,nazionalita)
     {
+        /** @type {string} */
         this.nome=nome;
+
+        /** @type {string} */
         this.cognome=cognome;
+
+        /** @type {string} */
         this.sesso=sesso;
+
+        /** @type {string} */
         this.data=data;
+
+        /** @type {string} */
         this.nazionalita=nazionalita;
     }
 }
@@ -42,8 +51,14 @@ class Gara
          * @param {string} tempo - Il tempo impiegato per completare la gara.
          * @param {Partecipante} partecipante - Il partecipante alla gara.
          */
+
+        /** @type {string} */
         this.tipo_gara=tipo_gara;
+
+        /** @type {string} */
         this.tempo=tempo;
+
+        /** @type {Partecipante} */
         this.partecipante=partecipante;
     }
 }
@@ -70,11 +85,22 @@ function r_dati(partecipante_map)
 
     if(!partecipante_map.has(chiave))
     {
+        /** @type {string} */
         let nome=prompt("Nome: ");
+
+        /** @type {string} */
         let cognome=prompt("Cognome: ");
+
+        /** @type {string} */
         let sesso=prompt("Sesso: ");
+
+        /** @type {string} */
         let data=prompt("Data di nascita: ");
+
+        /** @type {string} */
         let nazionalita=prompt("Nazionalità: ");
+
+        /** @type {Partecipante} */
         let partecipante=new Partecipante(nome,cognome,sesso,data,nazionalita);
         partecipante_map.set(chiave,partecipante);
         console.log("\nPartecipante iscritto correttamente!\n");
@@ -92,6 +118,7 @@ function r_dati(partecipante_map)
  */
 function casuale()
 {
+    /** @type {number} */
     let tempo=9.6+Math.random()*(30-9.6);
     return tempo.toFixed(2);
 }
@@ -106,13 +133,19 @@ function casuale()
  */
 function controllo_gara(tipo_gara, partecipante_map, gara_map, r2_set)
 {
+    /** @type {string} */
     let chiave=prompt("Inserisci l'ID del partecipante: ");
+
     if(partecipante_map.has(chiave))
     {
+        /** @type {Partecipante} */
         let partecipante=partecipante_map.get(chiave);
+
+        /** @type {boolean} */
         let iscritto=Array.from(gara_map.values()).some(gara=>gara.partecipante===partecipante && gara.tipo_gara===tipo_gara);
         if(!iscritto)
         {
+            /** @type {Gara} */
             let oggetto_gara=new Gara(tipo_gara,casuale(),partecipante);
             gara_map.set(chiave+"-"+tipo_gara,oggetto_gara);
         } 
@@ -136,11 +169,20 @@ function controllo_gara(tipo_gara, partecipante_map, gara_map, r2_set)
  */
 function r_gare(partecipante_map, gara_map, r2_set)
 {
-    let scelta, tipo_gara;
+    /** @type {string} */
+    let scelta;
+
+    /** @type {string} */
+    let tipo_gara;
+
     console.log("\nGARA\n");
+
     tipo_gara=prompt("Inserisci il tipo di gara: ");
     // Verifica se il tipo di gara è già stato registrato perchè if(!gara_map.has(tipo_gara)) non va
+
+    /** @type {string[]} */
     let garaRegistrata=Array.from(gara_map.values()).map(gara=>gara.tipo_gara);
+    
     if(!garaRegistrata.includes(tipo_gara))
     {
         do 
