@@ -1,4 +1,32 @@
-const prompt=require("prompt-sync")();
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: versione 2 - avanzata.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: versione 2 - avanzata.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>const prompt=require("prompt-sync")();
 const fs=require('fs');
 
 /**
@@ -77,14 +105,14 @@ function controlloId()
         console.log("\nInserisci l'ID del partecipante (solo numeri) ")
         chiave=prompt(">> ");
         let controllo_chiave=true;
-        for(let i=0;i<chiave.length;i++)
+        for(let i=0;i&lt;chiave.length;i++)
         {
-            if(chiave.charAt(i)<'0' || chiave.charAt(i)>'9')
+            if(chiave.charAt(i)&lt;'0' || chiave.charAt(i)>'9')
             {
                 controllo_chiave=false; break;
             }
         }
-        if(controllo_chiave && chiave.trim()!=="")
+        if(controllo_chiave &amp;&amp; chiave.trim()!=="")
         {
             break;
         }
@@ -99,7 +127,7 @@ function controlloId()
 /**
  * Registra un partecipante.
  * @function
- * @param {Map<string, Partecipante>} partecipante_map - La mappa dei partecipanti
+ * @param {Map&lt;string, Partecipante>} partecipante_map - La mappa dei partecipanti
  */
 function r_dati(partecipante_map)
 {
@@ -148,8 +176,8 @@ function casuale()
  * Controlla la partecipazione a una gara
  * @function
  * @param {string} tipo_gara - Il tipo di gara
- * @param {Map<string, Partecipante>} partecipante_map - La mappa dei partecipanti
- * @param {Map<string, Gara>} gara_map - La mappa delle gare
+ * @param {Map&lt;string, Partecipante>} partecipante_map - La mappa dei partecipanti
+ * @param {Map&lt;string, Gara>} gara_map - La mappa delle gare
  * @description Controlla se un partecipante è già iscritto a una gara di un determinato tipo e, in caso contrario, lo iscrive.
  */
 function controllo_gara(tipo_gara, partecipante_map, gara_map)
@@ -159,7 +187,7 @@ function controllo_gara(tipo_gara, partecipante_map, gara_map)
     if(partecipante_map.has(chiave))
     {
         let partecipante=partecipante_map.get(chiave);
-        let iscritto=Array.from(gara_map.values()).some(gara=>gara.partecipante===partecipante && gara.tipo_gara===tipo_gara);
+        let iscritto=Array.from(gara_map.values()).some(gara=>gara.partecipante===partecipante &amp;&amp; gara.tipo_gara===tipo_gara);
         if(!iscritto)
         {
             let oggetto_gara=new Gara(tipo_gara,casuale(),partecipante);
@@ -210,12 +238,11 @@ function tipoGaraValido(tipoGara)
 /**
  * @description Registra le gare chiedendo all'utente i dettagli della gara e i partecipanti
  * @function
- * @param {Map<string, Partecipante>} partecipante_map - La mappa dei partecipanti
- * @param {Map<string, Gara>} gara_map - La mappa delle gare
+ * @param {Map&lt;string, Partecipante>} partecipante_map - La mappa dei partecipanti
+ * @param {Map&lt;string, Gara>} gara_map - La mappa delle gare
  */
 function r_gare(partecipante_map, gara_map)
 {
-    console.clear();
     let scelta, tipo_gara;
     console.log("\nGARA\n");
     tipo_gara = prompt("Inserisci il tipo di gara: ");
@@ -240,17 +267,16 @@ function r_gare(partecipante_map, gara_map)
     }
     else
     {
-        console.log("Tipo di gara già inserito!\n");
+        console.log("Tipo di gara già inserito!");
         return;
     }
-    console.log("\n");
 }
 
 /**
  * @description Stampa tutte le gare registrate con i dettagli dei partecipanti
  * Stampa le gare registrate.
  * @function
- * @param {Map<string, Gara>} gara_map - La mappa delle gare
+ * @param {Map&lt;string, Gara>} gara_map - La mappa delle gare
  */
 function stampaGara(gara_map)
 {
@@ -268,7 +294,7 @@ function stampaGara(gara_map)
  * @description Crea e aggiorna la classifica del campionato basata sui tempi delle varie gare
  * Crea e aggiorna la classifica del campionato
  * @function
- * @param {Map<string, Gara>} gara_map - La mappa delle gare
+ * @param {Map&lt;string, Gara>} gara_map - La mappa delle gare
  * @param {Object} classificaPerTipo - La classifica per tipo di gara
  */
 function classifica(gara_map,classificaPerTipo)
@@ -309,7 +335,7 @@ function classifica(gara_map,classificaPerTipo)
 /**
  * @description Calcola e stampa la media dei tempi per ogni tipo di gara.
  * @function
- * @param {Map<string, Gara>} gara_map - La mappa delle gare
+ * @param {Map&lt;string, Gara>} gara_map - La mappa delle gare
  */
 function calcoloMedia(gara_map)
 {
@@ -397,7 +423,7 @@ function visualizzaStatistiche(gara_map)
                 stats.podio++;
             }
             // Incrementa podio per le posizioni 2 e 3
-            else if(posizione<=2) 
+            else if(posizione&lt;=2) 
             {
                 stats.podio++;
             } 
@@ -447,19 +473,19 @@ function main()
 
     /**
      * @description Mappa dei partecipanti 
-     * @type {Map<string, Object>}
+     * @type {Map&lt;string, Object>}
      */
     let partecipante_map=new Map();
 
     /**
      * @description Mappa delle gare.
-     * @type {Map<string, Object>} 
+     * @type {Map&lt;string, Object>} 
      */
     let gara_map=new Map();
 
     /**
      * @description Oggetto contenente le classifiche per tipo di gara.
-     * @type {Object.<string, Array>}
+     * @type {Object.&lt;string, Array>}
      */
     let classificaPerTipo={};
     console.log("Calcolatore di statistiche campionato di atletica leggera\n");
@@ -485,4 +511,26 @@ function main()
     }while(scelta!==0);
 }
 
-main();
+main();</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Gara.html">Gara</a></li><li><a href="Partecipante.html">Partecipante</a></li></ul><h3>Global</h3><ul><li><a href="global.html#calcoloMedia">calcoloMedia</a></li><li><a href="global.html#casuale">casuale</a></li><li><a href="global.html#classifica">classifica</a></li><li><a href="global.html#controlloId">controlloId</a></li><li><a href="global.html#controlloSpazioVuoto">controlloSpazioVuoto</a></li><li><a href="global.html#controllo_gara">controllo_gara</a></li><li><a href="global.html#leggiTipiGaraDaFile">leggiTipiGaraDaFile</a></li><li><a href="global.html#main">main</a></li><li><a href="global.html#r_dati">r_dati</a></li><li><a href="global.html#r_gare">r_gare</a></li><li><a href="global.html#stampaGara">stampaGara</a></li><li><a href="global.html#tipoGaraValido">tipoGaraValido</a></li><li><a href="global.html#visualizzaStatistiche">visualizzaStatistiche</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Wed May 29 2024 00:24:06 GMT+0200 (Ora legale dell’Europa centrale)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
