@@ -72,15 +72,6 @@ class Gara
 function r_dati(partecipante_map)
 {
 
-    console.clear();
-
-    console.log(
-        " _____ _____ _____ _____ _____ _____ _____ _____ _____ _____ _____ _____ _____ \n" +
-        "| __  |   __|   __|     |   __|_   _| __  |  _  |__   |     |     |   | |   __|\n" +
-        "|    -|   __|  |  |-   -|__   | | | |    -|     |   __|-   -|  |  | | | |   __|\n" +
-        "|__|__|_____|_____|_____|_____| |_| |__|__|__|__|_____|_____|_____|_|___|_____|\n"
-    );
-
     let chiave=prompt("Inserisci l'ID del partecipante: ");
 
     if(!partecipante_map.has(chiave))
@@ -129,9 +120,8 @@ function casuale()
  * @param {string} tipo_gara - Il tipo di gara 
  * @param {Map} partecipante_map - Mappa dei partecipanti con ID come chiave e oggetto partecipante come valore.
  * @param {Map} gara_map - Mappa delle gare con ID del partecipante e tipo di gara come chiave e oggetto gara come valore
- * @param {Set} r2_set 
  */
-function controllo_gara(tipo_gara, partecipante_map, gara_map, r2_set)
+function controllo_gara(tipo_gara, partecipante_map, gara_map)
 {
     /** @type {string} */
     let chiave=prompt("Inserisci l'ID del partecipante: ");
@@ -164,10 +154,9 @@ function controllo_gara(tipo_gara, partecipante_map, gara_map, r2_set)
  * @description - Funzione per registrare le gare per un tipo di gara specifico.
  * @param {Map} partecipante_map - Mappa dei partecipanti con ID come chiave e oggetto partecipante come valore 
  * @param {Map} gara_map - Mappa delle gare con ID del partecipante e tipo di gara come chiave e oggetto gara come valore.
- * @param {Set} r2_set 
  * @returns 
  */
-function r_gare(partecipante_map, gara_map, r2_set)
+function r_gare(partecipante_map, gara_map)
 {
     /** @type {string} */
     let scelta;
@@ -187,7 +176,7 @@ function r_gare(partecipante_map, gara_map, r2_set)
     {
         do 
         {
-            controllo_gara(tipo_gara, partecipante_map, gara_map, r2_set);
+            controllo_gara(tipo_gara, partecipante_map, gara_map);
             console.log("\nsi per continuare ad inserire;\nno per uscire;\n");
             scelta=prompt(">> ");
         }while(scelta.toLowerCase()!=="no");
@@ -260,7 +249,6 @@ function classifica(gara_map,classificaPerTipo)
  * @param {let} scelta - Per decidere dove andrà il flusso.
  * @param {Map} partecipante_map - Mappa dei partecipanti con ID come chiave e oggetto partecipante come valore.
  * @param {Map} gara_map - Mappa delle gare con ID del partecipante e tipo di gara come chiave e oggetto gara come valore.
- * @param {Set} r2_set - 
  * @param {let} classificaPerTipo - Oggetto contenente le classifiche delle gare per tipo di gara.
  */
 function main()
@@ -275,20 +263,11 @@ function main()
     /** @type {Map<string, Gara} */
     let gara_map=new Map();
 
-    /** @type {Set<string>} */
-    let r2_set=new Set();
-
     /** @type {Object.<string, {nome: string, cognome:string, tempo:numer}[]>} */
     let classificaPerTipo={};
     console.log("Calcolatore di statistiche campionato di atletica leggera\n");
     do
-    {
-        console.log(
-            " _____ _____ _____ _____ _____ _____ _____ _____    ___            _____             \n" +
-            "|  |  |   __| __  |   __|     |     |   | |   __|  |_  |    ___   | __  |___ ___ ___ \n" +
-            "|  |  |   __|    -|__   |-   -|  |  | | | |   __|   _| |_  |___|  | __ -| .'|_ -| -_|\n" +
-            " \\___/|_____|__|__|_____|_____|_____|_|___|_____|  |_____|        |_____|__,|___|___|\n"
-        );                                                                         
+    {                                                                      
         console.log("0 - Esci;");
         console.log("1 - Registrazione dei principali dati anagrafici dei giocatori;");
         console.log("2 - Registrazione delle singole gare e dei relativi partecipanti;");
@@ -298,7 +277,7 @@ function main()
         {
             case 0: console.log("\n\nciap ciap"); break;
             case 1: r_dati(partecipante_map); break;
-            case 2: r_gare(partecipante_map, gara_map,r2_set); break;
+            case 2: r_gare(partecipante_map, gara_map); break;
             case 3: classifica(gara_map,classificaPerTipo); break;
         }
     }while(scelta!==0);

@@ -1,4 +1,5 @@
 const prompt=require("prompt-sync")();
+const fs=require('fs');
 
 /**
  *@author  Sergio Scarale,Matteo De Bonis,Davide Cocomazzi,Biagio Piazza
@@ -52,7 +53,7 @@ function controlloId()
     while(true)
     {
         console.log("\nInserisci l'ID del partecipante (solo numeri) ")
-        chiave=prompt(">> ");
+        let chiave=prompt(">> ");
         let controllo_chiave=true;
         for(let i=0;i<chiave.length;i++)
         {
@@ -199,6 +200,26 @@ function controllo_gara(tipo_gara, partecipante_map, gara_map)
     }
 }
 
+function leggiTipiGaraDaFile()
+{
+    try 
+    {
+        let file=fs.readFileSync('tipi_gara.txt','utf8');
+        return file.split('\n').map(riga=>riga.trim());
+    } 
+    catch(err) 
+    {
+        console.error("Errore nella lettura del file dei tipi di gara:", err);
+        return [];
+    }
+}
+
+function tipoGaraValido(tipoGara) 
+{
+    let tipiGara=leggiTipiGaraDaFile();
+    return tipiGara.includes(tipoGara);
+}
+
 /**
  * Registra le gare
  * @function
@@ -206,31 +227,33 @@ function controllo_gara(tipo_gara, partecipante_map, gara_map)
  * @param {Map<string, Gara>} gara_map - La mappa delle gare
  * @description Registra le gare chiedendo all'utente i dettagli della gara e i partecipanti
  */
-
 function r_gare(partecipante_map, gara_map)
 {
-    console.clear();
     let scelta, tipo_gara;
     console.log("\nGARA\n");
-    console.log("Inserisci il tipo di gara ");
-    tipo_gara=prompt(">> ");    if(controlloSpazioVuoto(tipo_gara)) return;
+    tipo_gara = prompt("Inserisci il tipo di gara: ");
+    if (controlloSpazioVuoto(tipo_gara)) return;
 
-    // Verifica se il tipo di gara è già stato registrato perchè if(!gara_map.has(tipo_gara)) non va
+    if (!tipoGaraValido(tipo_gara)) 
+    {
+        console.log("Tipo di gara non valido!\n");
+        return;
+    }
+
+    // Verifica se il tipo di gara è già stato registrato
     let garaRegistrata=Array.from(gara_map.values()).map(gara=>gara.tipo_gara);
-    if(!garaRegistrata.includes(tipo_gara))
+    if (!garaRegistrata.includes(tipo_gara))
     {
         do
         {
             controllo_gara(tipo_gara, partecipante_map, gara_map);
-            console.log("\n - si per continuare ad inserire;\n - no per uscire;\n");
-            scelta=prompt(">> ");
-        }while(scelta.toLowerCase()!=="no");
-        console.log("\n");
-        //stampaGara(gara_map);     nel caso volessimo vedere le tempistiche dei partecipanti o comunque per vedere coloro che abbiamo inserito nella gara
+            console.log("\nsi per continuare ad inserire;\nno per uscire;\n");
+            scelta = prompt(">> ");
+        } while (scelta.toLowerCase() !== "no");
     }
     else
     {
-        console.log("Tipo di gara già inserito!\n");
+        console.log("Tipo di gara già inserito!");
         return;
     }
 }
@@ -420,7 +443,6 @@ function visualizzaStatistiche(gara_map)
         console.log("");
     });
 }
-
 
 /**
  * @description - Funzione principale che gestisce il menu e l'esecuzione delle altre funzioni.
